@@ -1,0 +1,53 @@
+services:
+  backend:
+    image: ${DOCKER_HUB_USER:-andreshu07}/smarttable-api:${BACKEND_TAG:-latest}
+    platform: linux/amd64
+    container_name: smarttable-api-local
+    ports:
+      - "${BACKEND_PORT:-3001}:3001"
+    environment:
+      PORT: "3001"
+      APP_ENV: local
+      APP_VERSION: compose-${BACKEND_TAG:-latest}
+      CORS_ORIGIN: "*"
+      DB_PATH: /app/data/smart-table.sqlite
+      SENTRY_DSN: ${SENTRY_DSN:-}
+    volumes:
+      - smarttable_data:/app/data
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:3001/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    restart: unless-stopped
+
+  frontend:
+    image: ${DOCKER_HUB_USER:-andreshu07}/smarttable-web:${FRONTEND_TAG:-latest}
+    platform: linux/amd64
+    container_name: smarttable-web-local
+    ports:
+      - "${FRONTEND_PORT:-5173}:80"
+    environment:
+      API_URL: http://localhost:${BACKEND_PORT:-3001}
+      APP_ENV: development
+      APP_VERSION: compose-${FRONTEND_TAG:-latest}
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:80/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    restart: unless-stopped
+
+volumes:
+  smarttable_data:
