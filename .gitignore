@@ -3,5 +3,8 @@
 *.tfstate
 *.tfstate.*
 terraform.tfvars
+.env
+.env.*
+!.env.example
 crash.log
 .DS_Store

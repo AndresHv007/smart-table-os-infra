@@ -26,3 +26,20 @@ terraform apply
 ```bash
 terraform destroy
 ```
+
+## Ejecución local con Docker Compose
+
+Para levantar Backend y Frontend completos en local reutilizando las imágenes de Docker Hub (con persistencia SQLite y healthchecks):
+
+```bash
+cp .env.example .env
+docker compose up -d
+```
+
+- **Frontend local:** `http://localhost:5173` (control móvil en `http://localhost:5173/mobile`)
+- **Backend local:** `http://localhost:3001/health`
+
+Para detener y limpiar contenedores:
+```bash
+docker compose down
+```

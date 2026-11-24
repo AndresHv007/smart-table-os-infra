@@ -28,3 +28,14 @@ jobs:
 
       - name: Terraform Validate
         run: terraform validate
+
+  validate-compose:
+    name: Docker Compose Config Validate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate docker-compose.yml
+        run: docker compose config -q
