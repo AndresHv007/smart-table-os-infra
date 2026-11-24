@@ -1,6 +1,6 @@
 subscription_id     = "00000000-0000-0000-0000-000000000000"
 resource_group_name = "rg-smarttable-os"
-location            = "eastus2"
+location            = "mexicocentral"
 name_suffix         = "andreshu"
 sku_name            = "B1"
 docker_hub_user     = "andreshu07"
